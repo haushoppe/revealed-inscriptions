@@ -1,7 +1,7 @@
 {
   "name": "revealed-inscriptions",
   "version": "1.0.0",
-  "description": "A weekly art and technical experiment exploring the Ordinals protocol. Each week, I inscribe my ideas and creative impulses onto the blockchain.",
+  "description": "Art and technical experiments exploring the Ordinals protocol. I inscribe my ideas and creative impulses onto the blockchain.",
   "scripts": {
     "start": "npx http-server -o"
   },
