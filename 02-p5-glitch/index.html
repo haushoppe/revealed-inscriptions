@@ -12,15 +12,35 @@
   <script src="/content/b6a50f5ba932b0ea7f652d9d28e59eced47bc6f8376c25e02d8b3457bb60ac8fi0"></script>
   <script src="/content/a499bb004988202e0e4e6be6dbe9a8dd28fc9565b5182f78a25cfea7d4ee4c67i0"></script>
   <script>
-    const i = '/content/45f869235d71180f0c5dab27331b6b61331e25a57a387308cc9db5d9319d39b9i0'; // filename of the JPG
+    const i = '/content/45f869235d71180f0c5dab27331b6b61331e25a57a387308cc9db5d9319d39b9i0';
     let g;
+
+    function calculateFitSize(imgWidth, imgHeight, canvasWidth, canvasHeight) {
+      const imgRatio = imgWidth / imgHeight;
+      const canvasRatio = canvasWidth / canvasHeight;
+      let w, h;
+
+      if (canvasRatio > imgRatio) {
+        h = canvasHeight;
+        w = h * imgRatio;
+      } else {
+        w = canvasWidth;
+        h = w / imgRatio;
+      }
+
+      return { w, h };
+    }
+
+    function displayGlitchedImage() {
+      const { w, h } = calculateFitSize(g.image.width, g.image.height, width, height);
+      image(g.image, width / 2 - w / 2, height / 2 - h / 2, w, h);
+    }
 
     function setup() {
       createCanvas(windowWidth, windowHeight);
+      noSmooth();
       g = new Glitch();
-      loadImage(i, function(img) {
-        g.loadImage(img);
-      });
+      loadImage(i, (img) => g.loadImage(img));
       frameRate(20);
     }
 
@@ -31,26 +51,8 @@
 
     function applyGlitch() {
       g.resetBytes();
-      // Generate a random integer between 1 and 3
-      const randomByteCount = Math.floor(random(1, 4));
-      g.randomBytes(randomByteCount);
+      g.randomBytes(Math.floor(random(1, 4)));
       g.buildImage();
-    }
-
-    function displayGlitchedImage() {
-      let imgRatio = g.image.width / g.image.height;
-      let canvasRatio = width / height;
-      let renderWidth, renderHeight;
-
-      if (canvasRatio > imgRatio) {
-        renderHeight = height;
-        renderWidth = renderHeight * imgRatio;
-      } else {
-        renderWidth = width;
-        renderHeight = renderWidth / imgRatio;
-      }
-
-      image(g.image, width / 2 - renderWidth / 2, height / 2 - renderHeight / 2, renderWidth, renderHeight);
     }
 
     function windowResized() {
