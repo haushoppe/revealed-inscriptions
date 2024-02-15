@@ -30,7 +30,7 @@
   <script src="/content/a499bb004988202e0e4e6be6dbe9a8dd28fc9565b5182f78a25cfea7d4ee4c67i0"></script>
   <script src="/content/44740a1f30efb247ef41de3355133e12d6f58ab4dc8a3146648e2249fa9c6a39i0"></script>
   <script>
-    const i = '/content/45f869235d71180f0c5dab27331b6b61331e25a57a387308cc9db5d9319d39b9i0';
+    const img = '/content/45f869235d71180f0c5dab27331b6b61331e25a57a387308cc9db5d9319d39b9i0';
     let g;
 
     function calculateFitSize(imgWidth, imgHeight, canvasWidth, canvasHeight) {
@@ -60,7 +60,7 @@
       noSmooth();
       frameRate(20);
       g = new Glitch();
-      loadImage(i, (img) => g.loadImage(img));
+      loadImage(img, (img) => g.loadImage(img));
     }
 
     function draw() {
@@ -80,22 +80,22 @@
       resizeCanvas(windowWidth, windowHeight);
     }
 
-    // sound
+    // glitch sound
 
     let noise, noiseFilter;
     let soundInitialized = false;
     let soundActive = false;
 
-    async function initializeGlitchComponents() {
+    async function initializeGlitchSound() {
       if (soundInitialized) return;
 
       await Tone.start();
 
-      noise = new Tone.Noise("white").start();
+      noise = new Tone.Noise('white').start();
       noiseFilter = new Tone.AutoFilter({
-        frequency: "8n",
-        baseFrequency: 500,
-        octaves: 4
+        frequency: '6000n',
+        baseFrequency: 200,
+        octaves: 2
       }).toDestination();
 
       noise.connect(noiseFilter);
@@ -106,6 +106,8 @@
 
     function triggerGlitchSound(rand) {
       if (!soundInitialized) { return; }
+
+      noiseFilter.baseFrequency = 200 * rand;
 
       if (rand < 3 || !soundActive) {
         noise.stop();
@@ -125,7 +127,7 @@
   <script>
     const btn = document.getElementById('startAudio');
     btn.addEventListener('click', async () => {
-      await initializeGlitchComponents();
+      await initializeGlitchSound();
       soundActive = !soundActive;
       btn.textContent = soundActive ? '🔇' : '🔈';
     });
