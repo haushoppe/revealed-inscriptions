@@ -7,38 +7,54 @@
       margin: 0;
       overflow: hidden;
     }
-
-    canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      margin: 0;
-    }
   </style>
 
   <script src="/content/b6a50f5ba932b0ea7f652d9d28e59eced47bc6f8376c25e02d8b3457bb60ac8fi0"></script>
   <script src="/content/a499bb004988202e0e4e6be6dbe9a8dd28fc9565b5182f78a25cfea7d4ee4c67i0"></script>
   <script>
-    let glitch;
+    const i = '/content/45f869235d71180f0c5dab27331b6b61331e25a57a387308cc9db5d9319d39b9i0'; // filename of the JPG
+    let g;
 
     function setup() {
       createCanvas(windowWidth, windowHeight);
-      background(0);
-      imageMode(CENTER);
-
-      glitch = new Glitch();
-      loadImage('/content/45f869235d71180f0c5dab27331b6b61331e25a57a387308cc9db5d9319d39b9i0', function (im) {
-        glitch.loadImage(im);
+      g = new Glitch();
+      loadImage(i, function(img) {
+        g.loadImage(img);
       });
+      frameRate(20);
     }
 
     function draw() {
-      glitch.resetBytes();
-      glitch.randomBytes(2); // add 2 random bytes for movement
-      glitch.buildImage();
-      image(glitch.image, width / 2, height / 2)
+      applyGlitch();
+      displayGlitchedImage();
+    }
+
+    function applyGlitch() {
+      g.resetBytes();
+      // Generate a random integer between 1 and 3
+      const randomByteCount = Math.floor(random(1, 4));
+      g.randomBytes(randomByteCount);
+      g.buildImage();
+    }
+
+    function displayGlitchedImage() {
+      let imgRatio = g.image.width / g.image.height;
+      let canvasRatio = width / height;
+      let renderWidth, renderHeight;
+
+      if (canvasRatio > imgRatio) {
+        renderHeight = height;
+        renderWidth = renderHeight * imgRatio;
+      } else {
+        renderWidth = width;
+        renderHeight = renderWidth / imgRatio;
+      }
+
+      image(g.image, width / 2 - renderWidth / 2, height / 2 - renderHeight / 2, renderWidth, renderHeight);
+    }
+
+    function windowResized() {
+      resizeCanvas(windowWidth, windowHeight);
     }
   </script>
 </head>
