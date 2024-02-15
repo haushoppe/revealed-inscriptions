@@ -39,9 +39,9 @@
     function setup() {
       createCanvas(windowWidth, windowHeight);
       noSmooth();
+      frameRate(20);
       g = new Glitch();
       loadImage(i, (img) => g.loadImage(img));
-      frameRate(20);
     }
 
     function draw() {
@@ -51,7 +51,7 @@
 
     function applyGlitch() {
       g.resetBytes();
-      g.randomBytes(Math.floor(random(1, 4)));
+      g.randomBytes(Math.floor(random(0, 4)));
       g.buildImage();
     }
 
