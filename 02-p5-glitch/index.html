@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <style type="text/css">
     body {
@@ -11,6 +12,7 @@
 
   <script src="/content/b6a50f5ba932b0ea7f652d9d28e59eced47bc6f8376c25e02d8b3457bb60ac8fi0"></script>
   <script src="/content/a499bb004988202e0e4e6be6dbe9a8dd28fc9565b5182f78a25cfea7d4ee4c67i0"></script>
+  <script src="/content/44740a1f30efb247ef41de3355133e12d6f58ab4dc8a3146648e2249fa9c6a39i0"></script>
   <script>
     const i = '/content/45f869235d71180f0c5dab27331b6b61331e25a57a387308cc9db5d9319d39b9i0';
     let g;
@@ -60,4 +62,46 @@
     }
   </script>
 </head>
+
+<body>
+  <button id="startAudio">🎧 Start Sound</button>
+
+  <script>
+    document.getElementById('startAudio').addEventListener('click', async () => {
+        await Tone.start();
+        console.log('Audio context activated');
+        document.getElementById('startAudio').style.display = 'none';
+
+        cellphoneInterference();
+    });
+
+    function cellphoneInterference() {
+        // Create a sequence of tones
+        const synth = new Tone.Synth({
+            oscillator: { type: "square" },
+            envelope: {
+                attack: 0.001,
+                decay: 0.2,
+                sustain: 0,
+                release: 0.2,
+            }
+        }).toDestination();
+
+        const notes = ["G4", "G#4", "G4", "G#4"];
+        let index = 0;
+
+        function playNextNote() {
+            if(index >= notes.length) index = 0;
+            const note = notes[index++];
+            synth.triggerAttackRelease(note, "64n");
+
+            const timeUntilNextNote = Math.random() * 300 + 50;
+            setTimeout(playNextNote, timeUntilNextNote);
+        }
+
+        playNextNote();
+    }
+</script>
+</body>
+
 </html>
