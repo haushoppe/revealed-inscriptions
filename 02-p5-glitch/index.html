@@ -8,7 +8,23 @@
       margin: 0;
       overflow: hidden;
     }
+
+    #container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    #startAudio {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 100;
+      background: transparent;
+      border: 0;
+    }
   </style>
+
 
   <script src="/content/b6a50f5ba932b0ea7f652d9d28e59eced47bc6f8376c25e02d8b3457bb60ac8fi0"></script>
   <script src="/content/a499bb004988202e0e4e6be6dbe9a8dd28fc9565b5182f78a25cfea7d4ee4c67i0"></script>
@@ -39,7 +55,8 @@
     }
 
     function setup() {
-      createCanvas(windowWidth, windowHeight);
+      let canvas = createCanvas(windowWidth, windowHeight);
+      canvas.parent('container');
       noSmooth();
       frameRate(20);
       g = new Glitch();
@@ -57,7 +74,6 @@
       g.randomBytes(rand);
       g.buildImage();
       triggerGlitchSound(rand);
-
     }
 
     function windowResized() {
@@ -66,68 +82,54 @@
 
     // sound
 
+    let noise, noiseFilter;
+    let soundInitialized = false;
+    let soundActive = false;
 
-    function initializeGlitchComponents() {
-      if (glitchComponentsInitialized) return; // Prevent re-initialization
+    async function initializeGlitchComponents() {
+      if (soundInitialized) return;
 
-      noise = new Tone.Noise("pink").start();
-      autoFilter = new Tone.AutoFilter({
+      await Tone.start();
+
+      noise = new Tone.Noise("white").start();
+      noiseFilter = new Tone.AutoFilter({
         frequency: "8n",
-        baseFrequency: 200,
-        octaves: 8
-      }).toDestination().start();
-      noise.connect(autoFilter);
+        baseFrequency: 500,
+        octaves: 4
+      }).toDestination();
 
-      synth = new Tone.Synth().toDestination();
+      noise.connect(noiseFilter);
+      noiseFilter.start();
 
-      glitchComponentsInitialized = true;
+      soundInitialized = true;
     }
 
-    // Function to be called in sync with visual glitches
     function triggerGlitchSound(rand) {
-      if (!glitchComponentsInitialized) return;
+      if (!soundInitialized) { return; }
 
-      // // Random note trigger
-      // const notes = ["C4", "D4"];
-      // const randomNote = notes[Math.floor(Math.random() * notes.length)];
-      // synth.triggerAttackRelease(randomNote, "16n");
-
-      // Optionally, adjust autoFilter or noise parameters here for variation
-      // autoFilter.frequency.setValueAtTime(Math.random() * 1000 + 500, Tone.now(), Math.random());
-
-      // start/stop for sudden cuts
-      if (rand < 3) {
+      if (rand < 3 || !soundActive) {
         noise.stop();
       } else {
         noise.start();
       }
     }
-
-    function startBackgroundDrone(frequency) {
-      const drone = new Tone.Oscillator({
-        frequency,
-        type: "sine"
-      }).toDestination();
-      drone.start();
-    }
   </script>
 </head>
 
 <body>
-  <button id="startAudio">🎧 Start Sound!</button>
+
+  <div id="container">
+    <button id="startAudio">🔈</button>
+  </div>
 
   <script>
-    let glitchComponentsInitialized = false;
-    let noise, autoFilter, synth;
-
-    document.getElementById('startAudio').addEventListener('click', async () => {
-      await Tone.start();
-      document.getElementById('startAudio').style.display = 'none';
-      initializeGlitchComponents();
-      // startBackgroundDrone("C2");
+    const btn = document.getElementById('startAudio');
+    btn.addEventListener('click', async () => {
+      await initializeGlitchComponents();
+      soundActive = !soundActive;
+      btn.textContent = soundActive ? '🔇' : '🔈';
     });
   </script>
 
 </body>
-
 </html>
