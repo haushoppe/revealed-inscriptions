@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
-  <title>Johannes x Olaf, "Saints"</title>
-
+<html>
 <head>
   <style type="text/css">
     body {
@@ -14,7 +12,6 @@
       position: fixed;
       top: 0;
       left: 0;
-      z-index: -1;
       width: 100vw;
       height: 100vh;
       margin: 0;
@@ -22,11 +19,8 @@
   </style>
 
   <script src="/content/b6a50f5ba932b0ea7f652d9d28e59eced47bc6f8376c25e02d8b3457bb60ac8fi0"></script>
-  <!-- <script src="https://cdn.jsdelivr.net/npm/p5@1.0.0/lib/p5.min.js"></script> -->
-  <script src="p5.glitch.js"></script>
+  <script src="/content/a499bb004988202e0e4e6be6dbe9a8dd28fc9565b5182f78a25cfea7d4ee4c67i0"></script>
   <script>
-    let libs = ["includes/libs/p5.glitch.js"];
-
     let glitch;
 
     function setup() {
@@ -35,24 +29,17 @@
       imageMode(CENTER);
 
       glitch = new Glitch();
-      loadImage('saints.webp', function (im) {
+      loadImage('/content/45f869235d71180f0c5dab27331b6b61331e25a57a387308cc9db5d9319d39b9i0', function (im) {
         glitch.loadImage(im);
       });
     }
 
     function draw() {
       glitch.resetBytes();
-
-      //glitch.replaceBytes(100, 104); // swap all decimal byte 100 for 104
-      glitch.randomBytes(1); // add one random byte for movement
-
+      glitch.randomBytes(2); // add 2 random bytes for movement
       glitch.buildImage();
       image(glitch.image, width / 2, height / 2)
     }
   </script>
 </head>
-
-<body>
-</body>
-
 </html>
