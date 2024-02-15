@@ -52,56 +52,82 @@
     }
 
     function applyGlitch() {
+      const rand = Math.floor(random(0, 4));
       g.resetBytes();
-      g.randomBytes(Math.floor(random(0, 4)));
+      g.randomBytes(rand);
       g.buildImage();
+      triggerGlitchSound(rand);
+
     }
 
     function windowResized() {
       resizeCanvas(windowWidth, windowHeight);
     }
+
+    // sound
+
+
+    function initializeGlitchComponents() {
+      if (glitchComponentsInitialized) return; // Prevent re-initialization
+
+      noise = new Tone.Noise("pink").start();
+      autoFilter = new Tone.AutoFilter({
+        frequency: "8n",
+        baseFrequency: 200,
+        octaves: 8
+      }).toDestination().start();
+      noise.connect(autoFilter);
+
+      synth = new Tone.Synth().toDestination();
+
+      glitchComponentsInitialized = true;
+    }
+
+    // Function to be called in sync with visual glitches
+    function triggerGlitchSound(rand) {
+      if (!glitchComponentsInitialized) return;
+
+      // // Random note trigger
+      // const notes = ["C4", "D4"];
+      // const randomNote = notes[Math.floor(Math.random() * notes.length)];
+      // synth.triggerAttackRelease(randomNote, "16n");
+
+      // Optionally, adjust autoFilter or noise parameters here for variation
+      // autoFilter.frequency.setValueAtTime(Math.random() * 1000 + 500, Tone.now(), Math.random());
+
+      // start/stop for sudden cuts
+      if (rand < 3) {
+        noise.stop();
+      } else {
+        noise.start();
+      }
+    }
+
+    function startBackgroundDrone(frequency) {
+      const drone = new Tone.Oscillator({
+        frequency,
+        type: "sine"
+      }).toDestination();
+      drone.start();
+    }
   </script>
 </head>
 
 <body>
-  <button id="startAudio">🎧 Start Sound</button>
+  <button id="startAudio">🎧 Start Sound!</button>
 
   <script>
+    let glitchComponentsInitialized = false;
+    let noise, autoFilter, synth;
+
     document.getElementById('startAudio').addEventListener('click', async () => {
-        await Tone.start();
-        console.log('Audio context activated');
-        document.getElementById('startAudio').style.display = 'none';
-
-        cellphoneInterference();
+      await Tone.start();
+      document.getElementById('startAudio').style.display = 'none';
+      initializeGlitchComponents();
+      // startBackgroundDrone("C2");
     });
+  </script>
 
-    function cellphoneInterference() {
-        // Create a sequence of tones
-        const synth = new Tone.Synth({
-            oscillator: { type: "square" },
-            envelope: {
-                attack: 0.001,
-                decay: 0.2,
-                sustain: 0,
-                release: 0.2,
-            }
-        }).toDestination();
-
-        const notes = ["G4", "G#4", "G4", "G#4"];
-        let index = 0;
-
-        function playNextNote() {
-            if(index >= notes.length) index = 0;
-            const note = notes[index++];
-            synth.triggerAttackRelease(note, "64n");
-
-            const timeUntilNextNote = Math.random() * 300 + 50;
-            setTimeout(playNextNote, timeUntilNextNote);
-        }
-
-        playNextNote();
-    }
-</script>
 </body>
 
 </html>
