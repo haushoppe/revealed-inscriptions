@@ -45,7 +45,7 @@ function displayGlitchedImage() {
 
 function setup() {
   let canvas = createCanvas(windowWidth, windowHeight);
-  canvas.parent('container');
+  canvas.parent('c');
   noSmooth();
   frameRate(fRate);
   g = new Glitch();
@@ -157,13 +157,13 @@ function addGlobalStyles() {
     overflow: hidden;
   }
 
-  #container {
+  #c {
     position: relative;
     width: 100vw;
     height: 100vh;
   }
 
-  #indicator {
+  #i {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -178,14 +178,14 @@ window.addEventListener('load', function() {
 
   addGlobalStyles();
 
-  const container = document.getElementById('container');
-  const indicator = document.getElementById('indicator');
+  const c = document.getElementById('c');
+  const i = document.getElementById('i');
 
   async function toggleSound() {
     await initializeGlitchSound();
     soundActive = !soundActive;
-    indicator.textContent = soundActive ? '🔈' : '🔇';
-    indicator.style.opacity = soundActive ? '1' : '0.3';
+    i.textContent = soundActive ? '🔈' : '🔇';
+    i.style.opacity = soundActive ? '1' : '0.3';
   }
 
   document.addEventListener('keydown', async (e) => {
@@ -195,5 +195,5 @@ window.addEventListener('load', function() {
     }
   });
 
-  container.addEventListener('click', async () => await toggleSound());
+  c.addEventListener('click', async () => await toggleSound());
 });
