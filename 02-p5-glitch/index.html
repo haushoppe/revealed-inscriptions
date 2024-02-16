@@ -135,8 +135,8 @@
 
     document.addEventListener('keydown', async (e) => {
       if (e.code === "Space") {
-        e.preventDefault(); // Prevent the default spacebar action (scrolling)
-        await toggleSound(); // Toggle the sound
+        e.preventDefault();
+        await toggleSound();
       }
     });
 
