@@ -126,12 +126,22 @@
     const container = document.getElementById('container');
     const indicator = document.getElementById('indicator');
 
-    container.addEventListener('click', async () => {
+    async function toggleSound() {
       await initializeGlitchSound();
       soundActive = !soundActive;
       indicator.textContent = soundActive ? '🔇' : '🔈';
-    });
-  </script>
+      indicator.style.opacity = soundActive ? '0.5' : '1';
+    }
 
+    document.addEventListener('keydown', async (e) => {
+      if (e.code === "Space") {
+        e.preventDefault(); // Prevent the default spacebar action (scrolling)
+        await toggleSound(); // Toggle the sound
+      }
+    });
+
+    container.addEventListener('click', async () => await toggleSound());
+
+  </script>
 </body>
 </html>
