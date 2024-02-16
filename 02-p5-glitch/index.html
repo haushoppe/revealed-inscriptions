@@ -81,6 +81,7 @@
 
         // creates a hidden canvas (offscreen buffer)
         buffer = createGraphics(originalImg.width, originalImg.height);
+        buffer.noSmooth();
         g.loadImage(workingImg);
       });
     }
