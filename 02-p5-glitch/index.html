@@ -190,7 +190,7 @@
       await initializeGlitchSound();
       soundActive = !soundActive;
       indicator.textContent = soundActive ? '🔈' : '🔇';
-      indicator.style.opacity = soundActive ? '0.5' : '1';
+      indicator.style.opacity = soundActive ? '1' : '0.3';
     }
 
     document.addEventListener('keydown', async (e) => {
