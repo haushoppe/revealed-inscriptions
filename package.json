@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Art and technical experiments exploring the Ordinals protocol. I inscribe my ideas and creative impulses onto the blockchain.",
   "scripts": {
-    "start": "npx http-server -o"
+    "start": "http-server --proxy https://ordin-delta.vercel.app/ -o"
   },
   "dependencies": {
     "http-server": "^14.1.1"

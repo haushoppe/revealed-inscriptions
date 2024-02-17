@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "http-server --proxy https://ordin-delta.vercel.app/ -b -o"
+    "start": "http-server --proxy https://ordin-delta.vercel.app/ -o"
   },
   "dependencies": {
     "http-server": "14.1.1"
