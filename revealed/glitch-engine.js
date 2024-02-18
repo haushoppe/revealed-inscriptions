@@ -21,6 +21,7 @@ let noiseStormCounter = 0;
 let noise, noiseFilter;
 let soundInitialized = false;
 let soundActive = false;
+let isPaused = false;
 
 function calculateFitSize(imgWidth, imgHeight, canvasWidth, canvasHeight) {
   const imgRatio = imgWidth / imgHeight;
@@ -62,8 +63,10 @@ function setup() {
 }
 
 function draw() {
-  applyGlitch();
-  displayGlitchedImage();
+  if (!isPaused) {
+    applyGlitch();
+    displayGlitchedImage();
+  }
 }
 
 function applyGlitch() {
@@ -185,13 +188,18 @@ window.addEventListener('load', function() {
     await initializeGlitchSound();
     soundActive = !soundActive;
     i.textContent = soundActive ? '🔈' : '🔇';
-    i.style.opacity = soundActive ? '1' : '0.3';
+    i.style.opacity = soundActive ? '0.3' : '1';
   }
 
   document.addEventListener('keydown', async (e) => {
+
     if (e.code === "Space") {
       e.preventDefault();
       await toggleSound();
+    }
+
+    if (e.code === "KeyP") {
+      isPaused = !isPaused;
     }
   });
 

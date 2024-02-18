@@ -23,3 +23,13 @@ a {
 span {
   color: gray;
 }
+
+.haushoppe-logo {
+  margin-top: 20px;
+  width: 200px;
+}
+
+.logo {
+  height: 400px;
+  width: 100%;
+}
