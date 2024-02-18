@@ -1,4 +1,4 @@
-// ** main glitch - adjust if required
+// ** main glitch variables - adjust if required
 
 let fRate = 20;
 let img = '/content/45f869235d71180f0c5dab27331b6b61331e25a57a387308cc9db5d9319d39b9i0';
