@@ -7,15 +7,9 @@ All source codes are available here.
 2. [Johannes x Olaf, "Ledgends"](TODO) ([code](02-p5-glitch/index.html))
 -->
 
+![Logo](assets/screenshot.png)
+
 Johannes x Olaf – 2024 – 5/5 inscriptions.
-
-
-#### Still in the mempool
-
-* grinding.webp - https://ordpool.space/tx/2b5a63488b48fee84202cff205b3b29454972853ef464c83c94c0f8a59c93289
-* exit-liquidity.webp – https://ordpool.space/tx/3113242bf75a483f5cf33828aab7ed8c17d333e1fb81c4c58cd7f4f907770500
-* broke.webp - https://ordpool.space/tx/eaf99dece8c98c492cdcd2fc08dccb319e4d65f269a1acb451e22d236a30cff9
-* the-cabal.webp – https://ordpool.space/tx/6613ff1d2247bbb15dc86e96b522111abd55e5785751aed6eb9e70736d515447
 
 ### Used libs
 
