@@ -61,7 +61,7 @@ function setup() {
   frameRate(fRate);
   g = new Glitch();
 
-  currentImgIndex = floor(random(imgArray.length));
+  currentImgIndex = 0;
   originalImg = imgArray[currentImgIndex].get();
   workingImg = originalImg.get();
 
@@ -109,12 +109,7 @@ function rearrangeImage() {
 
   // reset
   if (iterationCounter >= 5) {
-    let newIndex;
-    do {
-      newIndex = floor(random(imgArray.length));
-    } while (imgArray.length > 1 && newIndex === currentImgIndex);
-
-    currentImgIndex = newIndex;
+    currentImgIndex = (currentImgIndex + 1) % imgArray.length;
     originalImg = imgArray[currentImgIndex].get();
     workingImg = originalImg.get();
     iterationCounter = 0;
