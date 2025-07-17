@@ -1,7 +1,14 @@
 // ** main glitch variables - adjust if required
 
 let fRate = 20;
-let img = '/content/45f869235d71180f0c5dab27331b6b61331e25a57a387308cc9db5d9319d39b9i0';
+let img = [
+  '/scales-experiment/assets/20250715_122746.webp',
+  '/scales-experiment/assets/20250715_123618.webp',
+  '/scales-experiment/assets/20250715_124225.webp',
+  '/scales-experiment/assets/20250715_124515.webp',
+  '/scales-experiment/assets/20250715_125034.webp',
+  '/scales-experiment/assets/20250715_125614.webp',
+];
 let gRandMin = 0;
 let gRandMax = 3;
 let g;
@@ -15,6 +22,10 @@ let buffer; // object for off-screen drawing and image manipulation
 let iterationCounter = 0;
 let noiseStormCounter = 0;
 
+// ** new: multi-image support
+let imgArray = [];
+let imgPaths = img;
+let currentImgIndex = -1;
 
 // ** glitch sound
 
@@ -22,6 +33,10 @@ let noise, noiseFilter;
 let soundInitialized = false;
 let soundActive = false;
 let isPaused = false;
+
+function preload() {
+  imgArray = imgPaths.map(path => loadImage(path));
+}
 
 function calculateFitSize(imgWidth, imgHeight, canvasWidth, canvasHeight) {
   const imgRatio = imgWidth / imgHeight;
@@ -50,16 +65,15 @@ function setup() {
   noSmooth();
   frameRate(fRate);
   g = new Glitch();
-  loadImage(img, (img) => {
 
-    originalImg = img.get();
-    workingImg = originalImg.get();
+  currentImgIndex = floor(random(imgArray.length));
+  originalImg = imgArray[currentImgIndex].get();
+  workingImg = originalImg.get();
 
-    // creates a hidden canvas (offscreen buffer)
-    buffer = createGraphics(originalImg.width, originalImg.height);
-    buffer.noSmooth();
-    g.loadImage(workingImg);
-  });
+  // creates a hidden canvas (offscreen buffer)
+  buffer = createGraphics(originalImg.width, originalImg.height);
+  buffer.noSmooth();
+  g.loadImage(workingImg);
 }
 
 function draw() {
@@ -101,6 +115,13 @@ function rearrangeImage() {
 
   // reset
   if (iterationCounter >= 5) {
+    let newIndex;
+    do {
+      newIndex = floor(random(imgArray.length));
+    } while (imgArray.length > 1 && newIndex === currentImgIndex);
+
+    currentImgIndex = newIndex;
+    originalImg = imgArray[currentImgIndex].get();
     workingImg = originalImg.get();
     iterationCounter = 0;
   } else {
@@ -192,7 +213,6 @@ window.addEventListener('load', function() {
   }
 
   document.addEventListener('keydown', async (e) => {
-
     if (e.code === "Space") {
       e.preventDefault();
       await toggleSound();
