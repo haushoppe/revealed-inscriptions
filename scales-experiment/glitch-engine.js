@@ -10,7 +10,7 @@ let img = [
   '/scales-experiment/assets/20250715_125614.webp',
 ];
 let gRandMin = 0;
-let gRandMax = 3;
+let gRandMax = 2;
 let g;
 
 // ** slice image
@@ -20,18 +20,13 @@ let workingImg;
 let buffer; // object for off-screen drawing and image manipulation
 
 let iterationCounter = 0;
-let noiseStormCounter = 0;
+let imageResetCounter = 0;
 
 // ** new: multi-image support
 let imgArray = [];
 let imgPaths = img;
 let currentImgIndex = -1;
 
-// ** glitch sound
-
-let noise, noiseFilter;
-let soundInitialized = false;
-let soundActive = false;
 let isPaused = false;
 
 function preload() {
@@ -90,19 +85,18 @@ function applyGlitch() {
   // more than 3 times "rand > 2" makes a longer period of noise (because it's not stopped)
   // when there is a "storm" we also rearrange the image
   if (rand === gRandMax) {
-    noiseStormCounter++;
+    imageResetCounter++;
   } else {
-    noiseStormCounter = 0;
+    imageResetCounter = 0;
   }
 
-  if (noiseStormCounter > 2) {
+  if (imageResetCounter > 2) {
     rearrangeImage();
   }
 
   g.resetBytes();
   g.randomBytes(rand);
   g.buildImage();
-  triggerGlitchSound(rand);
 }
 
 function windowResized() {
@@ -141,36 +135,6 @@ function rearrangeImage() {
   g.loadImage(workingImg);
 }
 
-async function initializeGlitchSound() {
-  if (soundInitialized) return;
-
-  await Tone.start();
-
-  noise = new Tone.Noise('white').start();
-  noiseFilter = new Tone.AutoFilter({
-    frequency: '6000n',
-    baseFrequency: 200,
-    octaves: 2
-  }).toDestination();
-
-  noise.connect(noiseFilter);
-  noiseFilter.start();
-
-  soundInitialized = true;
-}
-
-function triggerGlitchSound(rand) {
-  if (!soundInitialized) { return; }
-
-  noiseFilter.baseFrequency = 200 * rand;
-
-  if (rand === gRandMax && soundActive) {
-    noise.start();
-  } else {
-    noise.stop();
-  }
-}
-
 function addGlobalStyles() {
 
   var style = document.createElement('style');
@@ -185,13 +149,6 @@ function addGlobalStyles() {
     position: relative;
     width: 100vw;
     height: 100vh;
-  }
-
-  #i {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    z-index: 100;
   }`;
 
   style.appendChild(document.createTextNode(css));
@@ -203,25 +160,10 @@ window.addEventListener('load', function() {
   addGlobalStyles();
 
   const c = document.getElementById('c');
-  const i = document.getElementById('i');
 
-  async function toggleSound() {
-    await initializeGlitchSound();
-    soundActive = !soundActive;
-    i.textContent = soundActive ? '🔈' : '🔇';
-    i.style.opacity = soundActive ? '0.3' : '1';
-  }
-
-  document.addEventListener('keydown', async (e) => {
-    if (e.code === "Space") {
-      e.preventDefault();
-      await toggleSound();
-    }
-
+  document.addEventListener('keydown', (e) => {
     if (e.code === "KeyP") {
       isPaused = !isPaused;
     }
   });
-
-  c.addEventListener('click', async () => await toggleSound());
 });
